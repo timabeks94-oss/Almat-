@@ -1,0 +1,127 @@
+import java.util.ArrayList;
+import java.util.Scanner;
+
+// Кітап классы
+class Book {
+    String title;
+    boolean isAvailable;
+
+    public Book(String title) {
+        this.title = title;
+        this.isAvailable = true;
+    }
+}
+
+// Негізгі класс
+public class LibrarySystem {
+    static ArrayList<Book> library = new ArrayList<>();
+    static Scanner scanner = new Scanner(System.in);
+
+    // Кітап қосу
+    public static void addBook() {
+        System.out.print("Кітап атауын енгізіңіз: ");
+        scanner.nextLine(); // buffer тазалау
+        String title = scanner.nextLine();
+
+        library.add(new Book(title));
+        System.out.println("Кітап сәтті қосылды!");
+    }
+
+    // Кітаптарды көрсету
+    public static void showBooks() {
+        if (library.isEmpty()) {
+            System.out.println("Кітаптар тізімі бос!");
+            return;
+        }
+
+        System.out.println("\nКітаптар тізімі:");
+        for (int i = 0; i < library.size(); i++) {
+            Book b = library.get(i);
+            System.out.println((i + 1) + ". " + b.title +
+                    (b.isAvailable ? " (Бар)" : " (Алынған)"));
+        }
+    }
+
+    // Кітап алу
+    public static void borrowBook() {
+        showBooks();
+        if (library.isEmpty()) return;
+
+        System.out.print("Алатын кітап номерін енгізіңіз: ");
+        int num = scanner.nextInt();
+
+        if (num > 0 && num <= library.size()) {
+            Book b = library.get(num - 1);
+            if (b.isAvailable) {
+                b.isAvailable = false;
+                System.out.println("Кітап алынды!");
+            } else {
+                System.out.println("Бұл кітап қазір қолжетімсіз!");
+            }
+        } else {
+            System.out.println("Қате номер!");
+        }
+    }
+
+    // Кітап қайтару
+    public static void returnBook() {
+        showBooks();
+        if (library.isEmpty()) return;
+
+        System.out.print("Қайтарылатын кітап номері: ");
+        int num = scanner.nextInt();
+
+        if (num > 0 && num <= library.size()) {
+            Book b = library.get(num - 1);
+            if (!b.isAvailable) {
+                b.isAvailable = true;
+                System.out.println("Кітап қайтарылды!");
+            } else {
+                System.out.println("Бұл кітап бұрыннан бос!");
+            }
+        } else {
+            System.out.println("Қате номер!");
+        }
+    }
+
+    // Меню
+    public static void menu() {
+        System.out.println("\n===== КІТАПХАНА ЖҮЙЕСІ =====");
+        System.out.println("1. Кітап қосу");
+        System.out.println("2. Кітаптарды көру");
+        System.out.println("3. Кітап алу");
+        System.out.println("4. Кітап қайтару");
+        System.out.println("0. Шығу");
+        System.out.print("Таңдау: ");
+    }
+
+    // main
+    public static void main(String[] args) {
+        int choice;
+
+        do {
+            menu();
+            choice = scanner.nextInt();
+
+            switch (choice) {
+                case 1:
+                    addBook();
+                    break;
+                case 2:
+                    showBooks();
+                    break;
+                case 3:
+                    borrowBook();
+                    break;
+                case 4:
+                    returnBook();
+                    break;
+                case 0:
+                    System.out.println("Бағдарлама аяқталды.");
+                    break;
+                default:
+                    System.out.println("Қате таңдау!");
+            }
+
+        } while (choice != 0);
+    }
